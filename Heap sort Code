@@ -35,7 +35,7 @@ void draw_sort(int arr[], int v)
     refresh_screen(60);
 }
 // To heapify a subtree rooted with node i which is 
-// an index in arr[]. v is v of heap 
+// an index in arr[]. v is n of heap 
 void heapify(int arr[], int v, int i) 
 { 
 	int largest = i; // Initialize largest as root 
