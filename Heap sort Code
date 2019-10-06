@@ -1,0 +1,151 @@
+#include "splashkit.h"
+using namespace std;
+#define NUM_VALS 20
+#include <iostream> 
+
+void draw_values(const int arr[], int v) 
+{
+    int x = 0;
+    int y;
+    int rect_height;
+    int rect_width = screen_width() / v;
+
+    for (int i = 0; i < v; i++)
+    {
+        rect_height = arr[i];
+        y = screen_height() - rect_height;
+
+        fill_rectangle(COLOR_GREEN, x, y, rect_width, rect_height);
+        draw_rectangle(COLOR_WHITE, x, y, rect_width, rect_height);
+        
+        x += rect_width;
+    }
+}
+void swap ( int &arr1, int &arr2)
+{
+    int temp = arr1;
+    arr1 = arr2;
+    arr2 = temp;
+}
+
+void draw_sort(int arr[], int v)
+{
+    clear_screen(COLOR_WHITE);
+    draw_values(arr, v);
+    refresh_screen(60);
+}
+// To heapify a subtree rooted with node i which is 
+// an index in arr[]. v is v of heap 
+void heapify(int arr[], int v, int i) 
+{ 
+	int largest = i; // Initialize largest as root 
+	int l = 2*i + 1; // left = 2*i + 1 
+	int r = 2*i + 2; // right = 2*i + 2 
+
+	// If left child is larger than root 
+	if (l < v && arr[l] > arr[largest]) 
+		largest = l; 
+
+	// If right child is larger than largest so far 
+	if (r < v && arr[r] > arr[largest]) 
+		largest = r; 
+
+	// If largest is not root 
+	if (largest != i) 
+	{ 
+		swap(arr[i], arr[largest]); 
+
+		// Recursively heapify the affected sub-tree 
+		heapify(arr, v, largest); 
+	} 
+} 
+
+// main function to do heap sort 
+void heapSort(int arr[], int v) 
+{ 
+	// Build heap (rearrange array) 
+	for (int i = v / 2 - 1; i >= 0; i--) 
+		heapify(arr, v, i); 
+
+	// One by one extract an element from heap 
+	for (int i=v-1; i>=0; i--) 
+	{ 
+		// Move current root to end 
+		swap(arr[0], arr[i]); 
+
+		// call max heapify on the reduced heap 
+		heapify(arr, i, 0); 
+	} 
+} 
+
+/* A  function to print array of v v */
+void printArray(int arr[], int v) 
+{ 
+	for (int i=0; i<v; ++i) 
+		cout << arr[i] << " "; 
+	cout << "\v"; 
+}
+void heap_sort (int arr[], int v)
+{
+    for (int j = 0; j < v; j++)
+    {
+    
+        for (int i = 0; i < v - 1; i++) 
+        {
+            if (arr [i] > arr [i + 1])
+            {
+                swap(arr[i], arr [i + 1]);
+                draw_sort(arr, v);
+            }
+            
+        }
+    }
+}
+void random_fill_array(int arr[], int v)
+{
+    for (int i = 0; i < v; i++) 
+    {
+        arr[i] = rnd(screen_height()) + 1;
+    }
+}
+
+
+void handle_input(int arr[], int v)
+{
+    if (key_typed(R_KEY))
+    {
+        random_fill_array(arr, v);
+    }
+    else if (key_typed(S_KEY))
+    {
+      heap_sort(arr, v);
+    }
+    else if (key_typed(D_KEY))
+    {
+
+    }
+} 
+
+
+
+int main()
+{
+    int arr[NUM_VALS];
+    
+
+    open_window("Sort Visualiser", 800, 600);
+    
+    random_fill_array(arr, NUM_VALS);
+
+    while ( not quit_requested() )
+    {
+        process_events();
+        handle_input(arr, NUM_VALS);
+        
+        draw_sort(arr, NUM_VALS);
+    }
+
+	
+
+    return 0;
+}
