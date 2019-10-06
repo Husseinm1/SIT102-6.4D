@@ -1,0 +1,95 @@
+#include "splashkit.h" 
+using namespace std;
+#define NUM_VALS 20
+
+void draw_values(const int values[], int size) 
+{
+    int x = 0;
+    int y;
+    int rect_height;
+    int rect_width = screen_width() / size;
+
+    for (int i = 0; i < size; i++)
+    {
+        rect_height = values[i];
+        y = screen_height() - rect_height;
+
+        fill_rectangle(COLOR_RED, x, y, rect_width, rect_height);
+        draw_rectangle(COLOR_WHITE, x, y, rect_width, rect_height);
+        
+        x += rect_width;
+    }
+}
+void swap ( int &value1, int &value2)
+{
+    int temp = value1;
+    value1 = value2;
+    value2 = temp;
+}
+
+void draw_sort(int values[], int size)
+{
+    clear_screen(COLOR_WHITE);
+    draw_values(values, size);
+    refresh_screen(60);
+}
+void bubble_sort (int values[], int size)
+{
+    for (int j = 0; j < size; j++)
+    {
+    
+        for (int i = 0; i < size - 1; i++) 
+        {
+            if (values [i] > values [i + 1])
+            {
+                swap(values[i], values [i + 1]);
+                draw_sort(values, size);
+            }
+            
+        }
+    }
+}
+void random_fill_array(int values[], int size)
+{
+    for (int i = 0; i < size; i++) 
+    {
+        values[i] = rnd(screen_height()) + 1;
+    }
+}
+
+void handle_input(int values[], int size)
+{
+    if (key_typed(R_KEY))
+    {
+        random_fill_array(values, size);
+    }
+    else if (key_typed(S_KEY))
+    {
+      bubble_sort(values, size);
+    }
+    else if (key_typed(D_KEY))
+    {
+
+    }
+} 
+
+
+
+int main()
+{
+    int values[NUM_VALS];
+
+    open_window("Sort Visualiser", 800, 600);
+    
+    random_fill_array(values, NUM_VALS);
+
+    while ( not quit_requested() )
+    {
+        process_events();
+        handle_input(values, NUM_VALS);
+        
+        draw_sort(values, NUM_VALS);
+    }
+
+    return 0;
+}
